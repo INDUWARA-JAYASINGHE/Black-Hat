@@ -1,27 +1,51 @@
-<?php
-// You can access the admin panel by using the following url: http://yoursite.com/admincp 
-
-require 'assets/init.php';
-
-$is_admin = Wo_IsAdmin();
-$is_moderoter = Wo_IsModerator();
-
-if ($wo['config']['maintenance_mode'] == 1) {
-    if ($wo['loggedin'] == false) {
-        header("Location: " . Wo_SeoLink('index.php?link1=welcome') . $wo['marker'] . 'm=true');
-        exit();
-    } else {
-        if ($is_admin === false) {
-            header("Location: " . Wo_SeoLink('index.php?link1=welcome') . $wo['marker'] . 'm=true');
-            exit();
+<?php 
+if ($f == 'admincp') {
+    if ($s == 'insert-invitation') {
+        $data             = array(
+            'status' => 200,
+            'html' => ''
+        );
+        $wo['invitation'] = Wo_InsertAdminInvitation();
+        if ($wo['invitation'] && is_array($wo['invitation'])) {
+            $data['html']   = Wo_LoadAdminPage('manage-invitation-keys/list');
+            $data['status'] = 200;
         }
-    } 
+        header("Content-type: application/json");
+        echo json_encode($data);
+        exit();
+    }
+    if ($s == 'rm-invitation' && isset($_GET['id']) && is_numeric($_GET['id'])) {
+        $data = array(
+            'status' => 304
+        );
+        if (Wo_DeleteAdminInvitation('id', $_GET['id'])) {
+            $data['status'] = 200;
+        }
+        header("Content-type: application/json");
+        echo json_encode($data);
+        exit();
+    }
+    if ($s == 'update-sitemap') {
+        $rate = (isset($_POST['rate']) && strlen($_POST['rate']) > 0) ? $_POST['rate'] : false;
+        $data = array(
+            'status' => 304
+        );
+        if (Wo_GenirateSiteMap($rate)) {
+            $data['status'] = 200;
+        }
+        header("Content-type: application/json");
+        echo json_encode($data);
+        exit();
+    }
+    if ($s == 'rm-user-invitation' && isset($_GET['id']) && is_numeric($_GET['id'])) {
+        $data = array(
+            'status' => 304
+        );
+        if (Wo_DeleteUserInvitation('id', $_GET['id'])) {
+            $data['status'] = 200;
+        }
+        header("Content-type: application/json");
+        echo json_encode($data);
+        exit();
+    }
 }
-if ($is_admin == false && $is_moderoter == false) {
-	header("Location: " . Wo_SeoLink('index.php?link1=welcome'));
-    exit();
-}
-
-
-// autoload admin panel files
-require 'admin-panel/autoload.php';
