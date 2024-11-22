@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: black;
+            color: #37FF00;
+            font-family: 'Consoles', monospace;
+        }
+
+        #clock, #date, #stopwatch {
+            display: none;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .button-container {
+            display: flex;
+            flex-wrap: nowrap;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #37FF00;
+            color: black;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            display: inline-block;
+            border-radius: 5px;
+            box-shadow: 0 4px #2B8A00; /* 3D button effect */
+            margin-right: 10px;
+        }
+
+        footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 10px;
+            background-color: black;
+            color: #37FF00;
+            font-size: 0.8em;
+        }
+    </style>
+    <title>Black Hat Clock</title>
+</head>
+<body>
+    <div class="button-container">
+        <button onclick="showTab('clock')">Clock</button>
+        <button onclick="showTab('date')">Date</button>
+        <button onclick="showTab('alarm')">Set Alarm</button>
+        <button onclick="showTab('stopwatch')">Stopwatch</button>
+    </div>
+
+    <div id="clock"></div>
+    <div id="date"></div>
+    <div id="stopwatch"></div>
+
+    <footer>
+        Black Hat Platforms by Black Hat Computer Technologies Inc.<br>
+        (A Jayasinghe Brothers Holdings Company)
+    </footer>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tabs
+            document.getElementById('clock').style.display = 'none';
+            document.getElementById('date').style.display = 'none';
+            document.getElementById('stopwatch').style.display = 'none';
+
+            // Show the selected tab
+            document.getElementById(tabName).style.display = 'block';
+
+            // Perform specific actions for each tab
+            switch (tabName) {
+                case 'clock':
+                    updateClock();
+                    setInterval(updateClock, 1000); // Update every 1000 milliseconds (1 second)
+                    break;
+                case 'date':
+                    updateClock(); // Initial call to set the clock immediately
+                    break;
+                case 'alarm':
+                    // Additional actions for the alarm tab, if needed
+                    break;
+                case 'stopwatch':
+                    updateStopwatch();
+                    break;
+            }
+        }
+
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            const date = now.toDateString();
+
+            const clock = document.getElementById('clock');
+            const dateDisplay = document.getElementById('date');
+
+            clock.textContent = `${hours}:${minutes}:${seconds}`;
+            dateDisplay.textContent = `Date: ${date}`;
+        }
+
+        function updateStopwatch() {
+            let stopwatchMilliseconds = 0;
+            const stopwatchDisplay = document.getElementById('stopwatch');
+
+            let interval;
+
+            function formatTime(milliseconds) {
+                const hours = Math.floor(milliseconds / 3600000).toString().padStart(2, '0');
+                const minutes = Math.floor((milliseconds % 3600000) / 60000).toString().padStart(2, '0');
+                const seconds = Math.floor((milliseconds % 60000) / 1000).toString().padStart(2, '0');
+                const millisecondsFormatted = (milliseconds % 1000).toString().padStart(3, '0');
+                return `${hours}:${minutes}:${seconds}:${millisecondsFormatted}`;
+            }
+
+            function update() {
+                stopwatchMilliseconds += 10;
+                stopwatchDisplay.textContent = formatTime(stopwatchMilliseconds);
+            }
+
+            interval = setInterval(update, 10);
+
+            // Clear interval when leaving the tab
+            document.getElementById('stopwatch').addEventListener('mouseleave', function() {
+                clearInterval(interval);
+            });
+        }
+
+        showTab('clock'); // Show the clock tab by default
+    </script>
+</body>
+</html>

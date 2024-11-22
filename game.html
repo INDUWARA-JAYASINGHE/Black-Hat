@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Black Hat Games - Sliding Puzzle</title>
+  <style>
+    body {
+      font-family: 'Consoles', monospace;
+      text-align: center;
+      background-color: #000;
+      color: #37FF00;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    #puzzle-container {
+      display: grid;
+      grid-template-columns: repeat(15, 40px);
+      grid-gap: 5px;
+      margin: 20px auto;
+    }
+    .puzzle-piece {
+      width: 40px;
+      height: 40px;
+      background-color: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      cursor: pointer;
+      color: #37FF00;
+    }
+    .empty {
+      background-color: #000;
+    }
+    h1 {
+      color: #37FF00;
+    }
+    footer {
+      margin-top: 50px;
+      color: #37FF00;
+    }
+  </style>
+</head>
+<body>
+  <h1>Black Hat Games - Sliding Puzzle</h1>
+  <div id="puzzle-container"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const size = 15; // 15x15 puzzle
+      const totalPieces = size * size;
+
+      // Create the puzzle pieces
+      const puzzleContainer = document.getElementById('puzzle-container');
+      for (let i = 1; i < totalPieces; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'puzzle-piece';
+        piece.textContent = i;
+        piece.addEventListener('click', () => movePiece(piece));
+        puzzleContainer.appendChild(piece);
+      }
+
+      // Add an empty piece
+      const emptyPiece = document.createElement('div');
+      emptyPiece.className = 'puzzle-piece empty';
+      puzzleContainer.appendChild(emptyPiece);
+
+      // Shuffle the puzzle pieces
+      shuffle();
+
+      // Function to shuffle the puzzle pieces
+      function shuffle() {
+        for (let i = puzzleContainer.children.length; i >= 0; i--) {
+          const randomIndex = Math.floor(Math.random() * i);
+          puzzleContainer.appendChild(puzzleContainer.children[randomIndex]);
+        }
+      }
+
+      // Function to move the puzzle piece
+      function movePiece(piece) {
+        const emptyPiece = document.querySelector('.empty');
+        const emptyIndex = Array.from(puzzleContainer.children).indexOf(emptyPiece);
+        const pieceIndex = Array.from(puzzleContainer.children).indexOf(piece);
+
+        if (isAdjacent(emptyIndex, pieceIndex)) {
+          emptyPiece.textContent = piece.textContent;
+          emptyPiece.classList.remove('empty');
+          piece.textContent = '';
+          piece.classList.add('empty');
+
+          if (isPuzzleSolved()) {
+            alert('Congratulations! You solved the puzzle!');
+          }
+        }
+      }
+
+      // Function to check if two pieces are adjacent
+      function isAdjacent(index1, index2) {
+        const row1 = Math.floor(index1 / size);
+        const col1 = index1 % size;
+        const row2 = Math.floor(index2 / size);
+        const col2 = index2 % size;
+
+        return Math.abs(row1 - row2) + Math.abs(col1 - col2) === 1;
+      }
+
+      // Function to check if the puzzle is solved
+      function isPuzzleSolved() {
+        const puzzlePieces = Array.from(puzzleContainer.children).map(piece => piece.textContent);
+        return puzzlePieces.every((value, index) => index + 1 === parseInt(value) || value === '');
+      }
+    });
+  </script>
+
+  <footer>
+    Complexcity Game Maker by Black Hat Computer Technologies Inc. (A JAYASINGHE BROTHERS HOLDINGS COMPANY)
+  </footer>
+</body>
+</html>

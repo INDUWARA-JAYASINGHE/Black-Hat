@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Black Hat Music Player</title>
+  <style>
+    body {
+      background: linear-gradient(to right, #ff5e62, #ffa084);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    #musicPlayer {
+      background: #2a2a2a;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    label {
+      background: #3498db;
+      color: #fff;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button {
+      background: #2ecc71;
+      color: #fff;
+      padding: 10px 15px;
+      margin: 0 5px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="musicPlayer">
+    <h1>Black Hat Music Player</h1>
+    
+    <input type="file" id="fileInput" accept="audio/*">
+    <label for="fileInput">Choose Music</label>
+
+    <br><br>
+
+    <audio id="audioPlayer" controls>
+      Your browser does not support the audio element.
+    </audio>
+
+    <br><br>
+
+    <button onclick="playPause()">Play/Pause</button>
+    <button onclick="stop()">Stop</button>
+    <button onclick="prevTrack()">Previous</button>
+    <button onclick="nextTrack()">Next</button>
+  </div>
+
+  <script>
+    const audioPlayer = document.getElementById('audioPlayer');
+    const fileInput = document.getElementById('fileInput');
+
+    fileInput.addEventListener('change', function() {
+      const file = this.files[0];
+      const objectURL = URL.createObjectURL(file);
+      audioPlayer.src = objectURL;
+    });
+
+    function playPause() {
+      if (audioPlayer.paused) {
+        audioPlayer.play();
+      } else {
+        audioPlayer.pause();
+      }
+    }
+
+    function stop() {
+      audioPlayer.pause();
+      audioPlayer.currentTime = 0;
+    }
+
+    function prevTrack() {
+      // Implement your logic for previous track
+    }
+
+    function nextTrack() {
+      // Implement your logic for next track
+    }
+  </script>
+</body>
+</html>

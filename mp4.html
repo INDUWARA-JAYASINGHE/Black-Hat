@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<FONT COLOR="#44FF00"><FONT TYPE="CONSOLAS">
+    <title>BLACK HAT VIDEO PLAYER</title>
+    <style>
+        body {
+            background-color: #333333;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #1e1e1e;
+            overflow: hidden;
+        }
+
+        .video-container {
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0 5px 5px 5px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            background-image: linear-gradient(to bottom, #007bff, #0056b3);
+            color: white;
+            font-size: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            background-color: #0056b3;
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+            background-color: #0056b3;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .progress-container {
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<center><h1>BLACK HAT MEDIA PLAYER</H1>
+    <div class="container">
+        <div class="video-container">
+            <video id="videoPlayer" controls>
+                <source src="path/to/your/video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <div class="btn-container">
+            <button id="stopBtn" class="btn">Stop</button>
+            <button id="playBtn" class="btn">Play</button>
+            <button id="pauseBtn" class="btn">Pause</button>
+            <button id="previousBtn" class="btn">Previous</button>
+            <button id="nextBtn" class="btn">Next</button>
+            <button id="fullscreenBtn" class="btn">Fullscreen</button>
+            <label for="fileInput" class="btn">Browse</label>
+            <input type="file" id="fileInput" accept="video/mp4" />
+        </div>
+
+        <div class="progress-container">
+            <input type="range" id="progressBar" value="0" step="1" class="progress-bar">
+        </div>
+    </div>
+
+    <script>
+        const videoPlayer = document.getElementById('videoPlayer');
+        const stopBtn = document.getElementById('stopBtn');
+        const playBtn = document.getElementById('playBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const previousBtn = document.getElementById('previousBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const fileInput = document.getElementById('fileInput');
+        const progressBar = document.getElementById('progressBar');
+
+        stopBtn.addEventListener('click', () => {
+            videoPlayer.pause();
+            videoPlayer.currentTime = 0;
+        });
+
+        playBtn.addEventListener('click', () => {
+            videoPlayer.play();
+        });
+
+        pauseBtn.addEventListener('click', () => {
+            videoPlayer.pause();
+        });
+
+        previousBtn.addEventListener('click', () => {
+            // Your logic to play the previous video
+        });
+
+        nextBtn.addEventListener('click', () => {
+            // Your logic to play the next video
+        });
+
+        fullscreenBtn.addEventListener('click', () => {
+            if (videoPlayer.requestFullscreen) {
+                videoPlayer.requestFullscreen();
+            } else if (videoPlayer.mozRequestFullScreen) {
+                videoPlayer.mozRequestFullScreen();
+            } else if (videoPlayer.webkitRequestFullscreen) {
+                videoPlayer.webkitRequestFullscreen();
+            } else if (videoPlayer.msRequestFullscreen) {
+                videoPlayer.msRequestFullscreen();
+            }
+        });
+
+        fileInput.addEventListener('change', () => {
+            const file = fileInput.files[0];
+            const objectUrl = URL.createObjectURL(file);
+            videoPlayer.src = objectUrl;
+        });
+
+        progressBar.addEventListener('input', () => {
+            videoPlayer.currentTime = progressBar.value;
+        });
+
+        videoPlayer.addEventListener('timeupdate', () => {
+            progressBar.value = videoPlayer.currentTime;
+        });
+    </script>
+</body>
+</html>

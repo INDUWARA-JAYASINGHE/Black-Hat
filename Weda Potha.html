@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waiting for Black Hat Servers</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #2d0032; /* Dark purple background */
+            color: #ffcc00; /* Gold text color */
+            font-family: Arial, sans-serif;
+            font-size: 1.5em;
+            flex-direction: column;
+        }
+
+        .loading-circle {
+            border: 8px solid rgba(255, 204, 0, 0.3); /* Faint gold border */
+            border-top: 8px solid #ffcc00; /* Solid gold top for animation */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        .loading-text {
+            font-size: 1.3em;
+            text-align: center;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+<link rel="icon" href=
+"https://www.shutterstock.com/image-vector/spy-agent-hacker-anonymous-white-600nw-1722014434.jpg"
+        type="image/x-icon" />
+</head>
+<body>
+    <div class="loading-circle"></div>
+    <div class="loading-text">Waiting for Black Hat Servers...</div>
+
+    <script>
+        // Redirect to the verifying page after 3 seconds
+        setTimeout(function () {
+            window.location.href = "file:///H:/hela%20weda%20medura/index.html"; // Link to the verifying page
+        }, 3000);
+    </script>
+</body>
+</html>

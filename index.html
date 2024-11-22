@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Hat Verify for Hela Weda Medura</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #0d0d26, #3d3d6c);
+            font-family: Arial, sans-serif;
+            color: #fff;
+            flex-direction: column;
+        }
+
+        .verification-container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            padding: 25px;
+            width: 550px;
+	     hieght: 1000px;
+            box-shadow: 0 4px 300px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #ffcc00;
+        }
+
+        .captcha-display {
+            position: relative;
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            padding: 15px;
+            background: #222245;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: inline-block;
+            color: #ffdf7e;
+            text-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+            filter: blur(0px);
+        }
+
+        .input-field {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+	        box-shadow: 0 4px 300px rgba(0, 0, 0, 0.5);
+        }
+
+        input[type="text"] {
+	     background: linear-gradient(135deg, #ffcc00, #ff9900);
+            color: #222;
+            font-size: 1em;
+            font-weight: bold;
+            font-size: 18px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #444466;
+            outline: none;
+            color: #000;
+            width: 80%;
+        }
+
+        label {
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.3);
+            cursor: pointer;
+	     
+        }
+
+        .verify-btn {
+            background: linear-gradient(135deg, #ffcc00, #ff9900);
+            color: #222;
+            font-size: 1em;
+            font-weight: bold;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 150px rgba(255, 153, 0, 0.5);
+        }
+
+        footer {
+            font-size: 0.8em;
+            color: #888;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+<link rel="icon" href=
+"https://www.shutterstock.com/image-vector/spy-agent-hacker-anonymous-white-600nw-1722014434.jpg"
+        type="image/x-icon" />
+    <script>
+        function generateCaptcha() {
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[{]}|;:',<.>/?~`";
+            let captcha = "";
+            for (let i = 0; i < 11; i++) {
+                captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            document.getElementById('captcha').textContent = captcha;
+            return captcha;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            let captchaCode = generateCaptcha();
+            const verifyBtn = document.getElementById('verifyBtn');
+
+            document.getElementById('captchaInput').addEventListener('input', function () {
+                verifyBtn.disabled = this.value != captchaCode || !document.getElementById('verifyCheckbox').checked;
+            });
+
+            document.getElementById('verifyCheckbox').addEventListener('change', function () {
+                verifyBtn.disabled = this.checked ? (document.getElementById('captchaInput').value != captchaCode) : true;
+            });
+
+            verifyBtn.addEventListener('click', function () {
+                if (document.getElementById('captchaInput').value === captchaCode) {
+                    window.location.href = "file:///H:/hela%20weda%20medura/test.html";
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="verification-container">
+        <h2>Black Hat | Are You Human ?</h2>
+        <div class="captcha-display" id="captcha"></div>
+        <div class="input-field">
+            <input type="text" id="captchaInput" placeholder="Enter BLACK HAT code">
+        </div>
+        <label>
+            <input type="checkbox" id="verifyCheckbox"> I'm not a robot
+        </label>
+        <button class="verify-btn" id="verifyBtn" disabled>Get Access from Black Hat</button>
+    </div>
+    <footer>Software by Black Hat | A Jayasinghe Brothers Holdings Company Limited</footer>
+</body>
+</html>

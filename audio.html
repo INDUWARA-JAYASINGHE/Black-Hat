@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Hat Ultrasound Waves Scanner</title>
+    <style>
+        body {
+            background-color: #0a0a2a; /* Dark blue background color */
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        #loader {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        #loader-text {
+            font-size: 24px;
+            color: #ffffff;
+        }
+
+        #header {
+            background-color: #000033; /* Dark blue background color */
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+
+        #logo {
+            color: #ffffff;
+            font-size: 32px;
+            font-weight: bold;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: .15em solid orange;
+            animation: typing 3.5s steps(40, end), blink-caret .5s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: orange }
+        }
+
+        #content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 20px;
+            position: relative;
+            display: none;
+        }
+
+        .waveform-container {
+            width: 100%;
+            max-width: 1200px;
+            background-color: #000033; /* Dark blue background color */
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 40px;
+            box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .waveform {
+            width: 100%;
+            display: block;
+            border-bottom: 1px solid #ffffff; /* White border */
+        }
+
+        .frequency-axis {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            line-height: 20px;
+            font-size: 12px;
+            text-align: center;
+            background-color: #000033; /* Dark blue background color */
+        }
+
+        .upload-btn {
+            background-color: #1a1a4a; /* Darker blue background color */
+            color: #ffffff;
+            border: none;
+            padding: 15px 25px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 20px;
+            border: 2px solid #ffffff;
+            transition: background-color 0.3s, border-color 0.3s;
+            box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.5);
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .upload-btn:hover {
+            background-color: #000033; /* Dark blue hover color */
+            border-color: #00F004;
+        }
+
+        .upload-btn input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        footer {
+            width: 100%;
+            background-color: #000033; /* Dark blue background color */
+            color: #ffffff;
+            text-align: center;
+            padding: 10px 0;
+            box-shadow: 0px -3px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .file-name {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            #logo {
+                font-size: 28px;
+            }
+
+            .upload-btn {
+                padding: 12px 20px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="loader">
+    <div id="loader-text">Loading...</div>
+</div>
+
+<div id="header">
+    <div id="logo">Black Hat Ultrasound Scanner</div>
+</div>
+
+<div id="content">
+    <button class="upload-btn">
+        <span>Upload MP3 Files</span>
+        <input type="file" accept=".mp3" multiple id="mp3FileInput">
+    </button>
+    <div id="waveform-containers">
+        <!-- Waveform containers will be dynamically added here -->
+    </div>
+</div>
+
+<footer>
+    Black Hat Ultrasound Waves Scanner by Black Hat Platforms Inc. [ A Jayasinghe Brothers Holdings Company Limited. ]
+</footer>
+
+<script>
+    function drawWaveform(buffer, canvas, fileName) {
+        const ctx = canvas.getContext('2d');
+        
+        const width = canvas.width;
+        const height = canvas.height;
+        
+        ctx.fillStyle = '#0a0a2a'; // Dark blue background color
+        ctx.fillRect(0, 0, width, height);
+        
+        ctx.strokeStyle = '#00F004'; // Wave color
+        ctx.lineWidth = 2;
+        
+        const data = buffer.getChannelData(0);
+        const step = Math.ceil(data.length / width);
+        const amp = height / 2;
+        
+        ctx.beginPath();
+        
+        for (let i = 0; i < width; i++) {
+            let min = 1.0;
+            let max = -1.0;
+            
+            for (let j = 0; j < step; j++) {
+                const datum = data[(i * step) + j];
+                
+                if (datum < min) {
+                    min = datum;
+                }
+                if (datum > max) {
+                    max = datum;
+                }
+            }
+            
+            ctx.moveTo(i, (1 + min) * amp);
+            ctx.lineTo(i, (1 + max) * amp);
+        }
+        
+        ctx.stroke();
+
+        drawFrequencyAxis(ctx, height);
+        
+        // Display filename
+        const fileNameElement = document.createElement('div');
+        fileNameElement.className = 'file-name';
+        fileNameElement.textContent = fileName;
+        canvas.parentNode.appendChild(fileNameElement);
+    }
+
+    function drawFrequencyAxis(ctx, height) {
+        ctx.fillStyle = '#0a0a2a'; // Dark blue background color
+        ctx.fillRect(0, height - 20, ctx.canvas.width, 20);
+
+        ctx.fillStyle = '#ffffff'; // Text color
+        ctx.textAlign = 'center';
+        ctx.font = '12px Arial';
+
+        const frequencies = ['20Hz', '100Hz', '200Hz', '500Hz', '1kHz', '2kHz', '5kHz', '10kHz', '20kHz'];
+
+        frequencies.forEach((freq, index) => {
+            const x = (ctx.canvas.width / (frequencies.length - 1)) * index;
+            ctx.fillText(freq, x, height - 5);
+        });
+    }
+
+    document.getElementById('mp3FileInput').addEventListener('change', function(e) {
+        const files = e.target.files;
+        const container = document.getElementById('waveform-containers');
+        
+        // Clear existing waveforms and filenames
+        container.innerHTML = '';
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const context = new AudioContext();
+                context.decodeAudioData(e.target.result, function(buffer) {
+                    const waveformContainer = document.createElement('div');
+                    waveformContainer.className = 'waveform-container';
+                    
+                    const canvas = document.createElement('canvas');
+                    canvas.className = 'waveform';
+                    canvas.width = 1200;
+                    canvas.height = 200;
+
+                    waveformContainer.appendChild(canvas);
+                    container.appendChild(waveformContainer);
+
+                    drawWaveform(buffer, canvas, file.name);
+                });
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+    });
+
+    // Hide loader and display content when page is fully loaded
+    window.addEventListener('load', function() {
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('header').style.display = 'block';
+        document.getElementById('content').style.display = 'flex';
+    });
+</script>
+
+</body>
+</html>

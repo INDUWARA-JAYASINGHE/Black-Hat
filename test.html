@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hela Weda Medura.lk | Niganto Database | Black Hat Softwares Corporation</title>
+
+
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121639;
+            color: #fff;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 1760px;
+            background-color: #0a174e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15000px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #f5f5f5;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .search-bar input {
+            width: 56%;
+            padding: 3px;
+            border-radius: 10px;
+	      height: 30px;
+            border: 2px solid #6a1b9a;
+            background-color: #16213e;
+            color: #fff;
+        }
+        .search-bar button {
+            padding: 10px;
+	     height: 40px;
+            background-color: #6a1b9a;
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            cursor: pointer;
+            margin-left: 10px;
+	     margin-right: 10px;
+            display: inline-flex;
+            align-items: center;
+        }
+        .search-bar button:hover {
+            background-color: #121639;
+            transform: scale(1.09);
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .button-group button {
+            padding: 10px;
+            background-color: black;
+            border: none;
+            border-radius: 30px;
+            color: #fff;
+            cursor: pointer;
+            flex: 1;
+            margin: 0 5px;
+        }
+        .button-group button:hover {
+            background-color: purple;
+            transform: scale(1.09);
+        }
+        .synonym-list {
+            background-color: #2a2a72;
+            padding: 10px;
+            border-radius: 10px;
+            overflow-y: auto;
+            max-height: 400px;
+            border: 2px solid #0f3460;
+        }
+        .synonym-item {
+            background-color: #6a1b9a;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .synonym-item button {
+            background-color: #6a1b9a;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .synonym-item button:hover {
+            background-color: #8e24aa;
+            transform: scale(1.05);
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #bbb;
+            font-size: 0.8em;
+            font-face: consolas;
+        }
+    
+
+
+  /* Custom Scrollbar */
+    #synonym-list::-webkit-scrollbar {
+      width: 12px;
+    }
+    #synonym-list::-webkit-scrollbar-thumb {
+      background-color: #6a1b9a;
+      border-radius: 6px;
+    }
+
+   
+
+/* Watermark style for printing */
+@media print {
+    body::before {
+        content: "(c)Black Hat Softwares | writeus.blackhat@gmail.com";
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 2em;
+        color: rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+}
+
+
+    </style>
+
+   <link rel="icon" href=
+"https://www.shutterstock.com/image-vector/spy-agent-hacker-anonymous-white-600nw-1722014434.jpg"
+        type="image/x-icon" />
+</head>
+<body>
+
+<div class="container">
+    <h1><font face="arial" color="gold">Hela Weda Medura.lk </h1></font>
+    
+<div class="search-bar">
+    <input type="text" id="search-input" placeholder=" Black Hat | Search for a Niganto or base word...">
+    <button onclick="searchSynonym()">Search </button>
+    <input type="text" id="goto-input" placeholder=" Black Hat | Go To for a Niganto or a Base...">
+    <button onclick="goToSynonym()">Go To </button>
+</div>
+
+<div class="button-group">
+    <button onclick="displaySynonyms()">🛗 Display Niganto</button>
+    <button onclick="addSynonym()">*️⃣ Add Niganto</button>
+    <button onclick="backupData()">⏏️ Backup Data</button>
+    <button onclick="restoreData()">🔃 Restore</button>
+    <button onclick="clearAllData()">🚮 Clear All</button>
+    <button onclick="printContent()">🖨️ Print Content</button>
+</div>
+
+<hr>
+    <div class="synonym-list" id="synonym-list"></div>
+<hr>
+    <footer><font face="arial" color="gold">
+      Software by -   &copy; 2016-2024 Black Hat Corporation | A Jayasinghe Brothers Holdings Company Limited <br><br>For Contact a Black Hat Developers or a Assistance Inbox or Follow us - writeus.blackhat@gmail.com | followus.blackhat@gmail.com | www.blackhathome.nicepage.io | www.connecttoblackhat.nicepage.io | www.blackhatpro.nicepage.io <br> or <br> Now We're on Black Hat | Videoshot | Facebook | Instergram | X | Youtube | Tiktok | Telegram 
+    </footer></font>
+</div>
+
+
+
+<script>
+    let synonyms = JSON.parse(localStorage.getItem('synonyms')) || {};
+
+  function searchSynonym() {
+    const searchWord = document.getElementById('search-input').value.trim();
+    const resultDiv = document.getElementById('synonym-list');
+    resultDiv.innerHTML = '';
+    let found = false;
+
+    for (const [baseWord, synonymList] of Object.entries(synonyms)) {
+        if (baseWord === searchWord || synonymList.includes(searchWord)) {
+            const synList = synonymList.join(', ');
+            const resultItem = document.createElement('p');
+            resultItem.innerHTML = `Base Word: <strong>${baseWord}</strong> | Niganto: ${synList}`;
+            resultDiv.appendChild(resultItem);
+            found = true;
+        }
+    }
+    
+    if (!found) {
+        resultDiv.innerHTML = '<p>No results found.</p>';
+    }
+}
+
+
+
+ function displaySynonyms() {
+        const resultDiv = document.getElementById('synonym-list');
+        resultDiv.innerHTML = '';
+        for (const [baseWord, synonymList] of Object.entries(synonyms)) {
+            const synList = synonymList.join(', ');
+            const synonymItem = document.createElement('div');
+            synonymItem.className = 'synonym-item';
+            synonymItem.innerHTML = `
+                <span><strong>${baseWord}</strong>: ${synList}</span>
+                <div class="button-container">
+                    <button onclick="editBaseWord('${baseWord}')">✏️ Edit</button>
+                    <button onclick="deleteSynonym('${baseWord}')">❌ Delete</button>
+                </div>
+            `;
+            resultDiv.appendChild(synonymItem);
+        }
+    }
+
+    function addSynonym() {
+        const baseWord = prompt("Enter the base word:");
+        const synonym = prompt("Enter the Niganto Word:");
+        if (baseWord && synonym) {
+            if (!synonyms[baseWord]) {
+                synonyms[baseWord] = [];
+            }
+            synonyms[baseWord].push(synonym);
+            localStorage.setItem('synonyms', JSON.stringify(synonyms));
+            displaySynonyms();
+        }
+    }
+
+ function editSynonym(baseWord) {
+            const newSynonym = prompt('Enter the new Niganto:').toLowerCase();
+            if (newSynonym) {
+                synonyms[baseWord].push(newSynonym);
+                localStorage.setItem('synonyms', JSON.stringify(synonyms));
+                displaySynonyms();
+            }
+        }
+
+    function deleteSynonym(baseWord) {
+        if (confirm(`Are you sure you want to delete '${baseWord}' and its synonyms?`)) {
+            delete synonyms[baseWord];
+            localStorage.setItem('synonyms', JSON.stringify(synonyms));
+            displaySynonyms();
+        }
+    }
+
+    function backupData() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(synonyms));
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href", dataStr);
+        downloadAnchor.setAttribute("download", "black hat_backup.json");
+        downloadAnchor.click();
+    }
+
+    function restoreData() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        input.onchange = e => {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function() {
+                const data = JSON.parse(reader.result);
+                synonyms = {...synonyms, ...data};
+                localStorage.setItem('synonyms', JSON.stringify(synonyms));
+                displaySynonyms();
+            };
+            reader.readAsText(file);
+        };
+        input.click();
+    }
+
+    window.onload = displaySynonyms;
+
+function clearAllData() {
+    if (confirm("Are you sure you want to clear all data?")) {
+        if (confirm("Are you really sure? This action cannot be undone!")) {
+            localStorage.removeItem('synonyms');
+            synonyms = {};
+            displaySynonyms();
+        }
+    }
+}
+
+
+function editBaseWord(baseWord) {
+    const newBaseWord = prompt("Edit the base word:", baseWord);
+    if (newBaseWord && newBaseWord !== baseWord) {
+        // Rename the base word key and update synonyms
+        synonyms[newBaseWord] = synonyms[baseWord];
+        delete synonyms[baseWord];
+    }
+
+    let synonymList = synonyms[newBaseWord];
+    for (let i = 0; i < synonymList.length; i++) {
+        const newSynonym = prompt(`Edit synonym (${synonymList[i]}) for base word '${newBaseWord}':`, synonymList[i]);
+        if (newSynonym) {
+            synonymList[i] = newSynonym;
+        }
+    }
+
+    localStorage.setItem('synonyms', JSON.stringify(synonyms));
+    displaySynonyms();
+}
+
+
+function goToSynonym() {
+    const searchWord = document.getElementById('goto-input').value.trim();
+    const resultDiv = document.getElementById('synonym-list');
+    const items = resultDiv.getElementsByClassName('synonym-item');
+    
+    let foundItems = [];
+    
+    // Loop through all items to find matches in base words or synonyms
+    for (let item of items) {
+        const baseWordText = item.querySelector('strong').innerText;
+        const synonymsText = item.innerText;
+
+        if (baseWordText === searchWord || synonymsText.includes(searchWord)) {
+            foundItems.push(item);
+        }
+    }
+
+    if (foundItems.length > 0) {
+        resultDiv.innerHTML = ''; // Clear the current list
+
+        // Add each found item to the display with a temporary highlight
+        foundItems.forEach(item => {
+            resultDiv.appendChild(item);
+            item.style.backgroundColor = '#f0a500';
+            setTimeout(() => { item.style.backgroundColor = ''; }, 1500);
+        });
+    } else {
+        alert('Word not found.');
+    }
+}
+
+
+function printContent() {
+    const printArea = document.getElementById('synonym-list').innerHTML;
+    const originalContent = document.body.innerHTML;
+
+    document.body.innerHTML = `<div>${printArea}</div>`;
+    window.print();
+    document.body.innerHTML = originalContent;
+
+    // Reloading scripts and styles
+    location.reload();
+}
+
+
+
+
+</script>
+
+</body>
+</html>
